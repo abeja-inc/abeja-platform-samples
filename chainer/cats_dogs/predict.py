@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image
 
 import chainer
+import chainer.functions as F
 from preprocess import preprocess_input
 from net import SimpleNet
 
@@ -45,7 +46,8 @@ def handler(_iter, ctx):
 
         with chainer.using_config('train', False):
             with chainer.using_config('enable_backprop', False):
-                result = model(x)[0].data
+                predict = F.softmax(model(x))
+                result = predict[0].data
                 if USE_GPU >= 0:
                     result = to_cpu(result)
 
