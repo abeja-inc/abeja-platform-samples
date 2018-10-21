@@ -1,12 +1,22 @@
 #!/bin/bash
 
-abeja datalake upload --channel_id 1578967877196 --metadata label:airplane --recursive ./train/airplane/
-abeja datalake upload --channel_id 1578967877196 --metadata label:automobile --recursive ./train/automobile/
-abeja datalake upload --channel_id 1578967877196 --metadata label:bird --recursive ./train/bird/
-abeja datalake upload --channel_id 1578967877196 --metadata label:cat --recursive ./train/cat/
-abeja datalake upload --channel_id 1578967877196 --metadata label:deer --recursive ./train/deer/
-abeja datalake upload --channel_id 1578967877196 --metadata label:dog --recursive ./train/dog/
-abeja datalake upload --channel_id 1578967877196 --metadata label:frog --recursive ./train/frog/
-abeja datalake upload --channel_id 1578967877196 --metadata label:horse --recursive ./train/horse/
-abeja datalake upload --channel_id 1578967877196 --metadata label:ship --recursive ./train/ship/
-abeja datalake upload --channel_id 1578967877196 --metadata label:truck --recursive ./train/truck/
+wget http://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
+tar xzvf cifar-10-python.tar.gz
+python3 extract.py
+
+CHANNEL_ID=`abeja datalake create-channel --name CIFAR10 --description CIFAR10 | jq -r '.channel.channel_id'`
+TEST_CHANNEL_ID=`abeja datalake create-channel --name CIFAR10-test --description CIFAR10 | jq -r '.channel.channel_id'`
+
+labels=(airplane automobile bird cat deer dog frog horse ship truck)
+
+for label in ${labels[@]}
+do
+  abeja datalake upload --channel_id ${CHANNEL_ID} --metadata label:${label} --recursive ./train/${label}/
+  abeja datalake upload --channel_id ${TEST_CHANNEL_ID} --metadata label:${label} --recursive ./test/${label}/
+done
+
+DATASET_ID=`abeja dataset create-dataset --name CIFAR10 --type classification --props dataset.json | jq -r '.dataset_id'`
+TEST_DATASET_ID=`abeja dataset create-dataset --name CIFAR10-test --type classification --props dataset.json | jq -r '.dataset_id'`
+
+abeja dataset import-from-datalake --channel_id ${CHANNEL_ID} --dataset_id ${DATASET_ID}
+abeja dataset import-from-datalake --channel_id ${TEST_CHANNEL_ID} --dataset_id ${TEST_DATASET_ID}

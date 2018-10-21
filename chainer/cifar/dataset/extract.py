@@ -3,7 +3,6 @@ import tqdm
 import numpy as np
 import pickle
 from PIL import Image
-from abeja.datalake import Client
 
 def unpickle(file):
     with open(file, 'rb') as fo:
@@ -65,11 +64,3 @@ if __name__ == '__main__':
 
     save_images(tr_data10, tr_labels10, tr_files10, label_names10, 'train')
     save_images(te_data10, te_labels10, te_files10, label_names10, 'test')
-   
-    #client = Client()
-    #channel_id = '1578967877196'
-    #channel = client.get_channel(channel_id)
-
-    #for name in label_names10:
-    #    channel.upload_dir(os.path.join('train', name), metadata={'label': name}, use_thread=False)
-    #    #channel.upload_dir(os.path.join('test', name), metadata={'label': name})

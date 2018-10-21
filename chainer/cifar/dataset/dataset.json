@@ -3,43 +3,43 @@
     {
       "categories": [
         {
-          "id": 1,
+          "id": 0,
           "label": "airplane"
         },
         {
-          "id": 2,
+          "id": 1,
           "label": "automobile"
         },
         {
-          "id": 3,
+          "id": 2,
           "label": "bird"
         },
         {
-          "id": 4,
+          "id": 3,
           "label": "cat"
         },
         {
-          "id": 5,
+          "id": 4,
           "label": "deer"
         },
         {
-          "id": 6,
+          "id": 5,
           "label": "dog"
         },
         {
-          "id": 7,
+          "id": 6,
           "label": "frog"
         },
         {
-          "id": 8,
+          "id": 7,
           "label": "horse"
         },
         {
-          "id": 9,
+          "id": 8,
           "label": "ship"
         },
         {
-          "id": 10,
+          "id": 9,
           "label": "truck"
         }
       ],
