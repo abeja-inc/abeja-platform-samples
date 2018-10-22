@@ -18,5 +18,5 @@ done
 DATASET_ID=`abeja dataset create-dataset --name CIFAR10 --type classification --props dataset.json | jq -r '.dataset_id'`
 TEST_DATASET_ID=`abeja dataset create-dataset --name CIFAR10-test --type classification --props dataset.json | jq -r '.dataset_id'`
 
-abeja dataset import-from-datalake --channel_id ${CHANNEL_ID} --dataset_id ${DATASET_ID}
-abeja dataset import-from-datalake --channel_id ${TEST_CHANNEL_ID} --dataset_id ${TEST_DATASET_ID}
+python import_dataset_from_datalake.py --channel_id ${CHANNEL_ID} --dataset_id ${DATASET_ID}
+python import_dataset_from_datalake.py --channel_id ${TEST_CHANNEL_ID} --dataset_id ${TEST_DATASET_ID}
