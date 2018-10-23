@@ -2,20 +2,20 @@
 import argparse
 import json
 from collections import defaultdict
+
 from abejacli.config import (
-    ORGANIZATION_ENDPOINT
+    ABEJA_PLATFORM_USER_ID,
+    ABEJA_PLATFORM_TOKEN
 )
-from abejacli.session import (
-    api_post
-)
-from abejacli.logger import get_logger
-from abejacli.datalake import generate_channel_file_iter_by_period
-from abejacli.config import DATASET_CHUNK_SIZE
+from abeja.datalake import Client as DatalakeClient
+from abeja.datasets import Client as DatasetClient
 
-logger = get_logger()
+credential = {
+    'user_id': ABEJA_PLATFORM_USER_ID,
+    'personal_access_token': ABEJA_PLATFORM_TOKEN
+}
 
-
-def create_request_element(channel_id, file_info, data):
+def create_request_element(channel_id, file_info, data_id, annotation):
     """
     create dataset item from datalake file
     :param channel_id:
@@ -24,87 +24,83 @@ def create_request_element(channel_id, file_info, data):
     :param label_metadata_key:
     :return:
     """
-    file_id = file_info.get('file_id')
-    filename = data['filename']
-    annotation = data['annotation']
-    data_uri = 'datalake://{}/{}'.format(channel_id, file_id)
 
+    data_uri = 'datalake://{}/{}'.format(channel_id, file_info.file_id)
+    
     data = {
         'source_data': [
             {
                 'data_uri': data_uri,
-                'data_type': file_info['content_type'],
-                'metadata': {'meta-filename': filename}
+                'data_type': file_info.content_type
             }
         ],
         'attributes': {
-            'classification': annotation
+            'classification': annotation,
+            'id': data_id
         }
     }
     return data
 
 
-def register_dataset_items(dataset_id, items):
-    """
-    execute dataset api to registr dataset items
-    :param dataset_id:
-    :param items:
-    :return:
-    """
-    url = '{}/datasets/{}/items'.format(ORGANIZATION_ENDPOINT, dataset_id)
-
-    def _chunked(l, n):
-        for i in range(0, len(l), n):
-            yield l[i:i + n]
-
-    # max number of items for add items should is 500 (by default)
-    for chunked_items in _chunked(items, DATASET_CHUNK_SIZE):
-        api_post(url, json.dumps(chunked_items))
+def register_dataset_items(organization_id, dataset_id, items):
+    client = DatasetClient(organization_id=organization_id, credential=credential)
+    dataset = client.get_dataset(dataset_id)
+    dataset_items = dataset.dataset_items
+    for item in items:
+        source_data = item['source_data']
+        attributes = item['attributes']
+        dataset_items.create(source_data=source_data, attributes=attributes)
 
 
-def register_dataset_items_from_datalake(dataset_id, channel_id, label_metadata_key):
-    """
-    register datasets from datalake channel
-    :param dataset_id: target dataset id
-    :param channel_id: target channel
-    :param label_metadata_key: metadata key which label value is stored
-    :return:
-    """
+def register_dataset_items_from_datalake(organization_id, channel_id, dataset_name, label_metadata_key):
     with open('dataset.json', 'r') as f:
-        dataset = json.load(f)
-        label2id = {x['label']: x['label_id'] for x in dataset['attributes'][0]['categories']}
+        dataset_props = json.load(f)
     
-    def to_annotation(file_info):
-        file_metadata = file_info.get('metadata')
-        label = file_metadata['x-abeja-meta-{}'.format(label_metadata_key)]
-        filename = file_metadata['x-abeja-meta-filename']
-        return {'filename': filename, 'annotation': {label_metadata_key: label, 'label_id': label2id[label]}}
-
     print('Getting data from datalake....')
-    file_iter = generate_channel_file_iter_by_period(channel_id)
-    dataset_items = [
-        create_request_element(channel_id, file_info, to_annotation(file_info))
-        for file_info in file_iter
-    ]
+    client = DatalakeClient(organization_id=organization_id, credential=credential)
+
+    channel = client.get_channel(channel_id)
+   
+    def to_annotation(file_info):
+        label = file_info.metadata[label_metadata_key]
+        label_id = label2id[label]
+        return {label_metadata_key: label, 'label_id': label_id}
+
+    file_iter = channel.list_files(limit=1000, prefetch=False)
+    label2id = {x['label']: x['label_id'] for x in dataset_props['attributes'][0]['categories']}
+
+    dataset_items = []
+    for file_info in file_iter:
+        item = create_request_element(channel_id, file_info, 
+                                      data_id=int(file_info.metadata['filename'].split('.')[0]),
+                                      annotation=to_annotation(file_info))
+        dataset_items.append(item)
+        if len(dataset_items) % 1000 == 0:
+            print(len(dataset_items))
+    
     print('Registering dataset items....')
-    register_dataset_items(dataset_id, dataset_items)
-    return {
-        'result': 'success',
-        'dataset_items': len(dataset_items),
-        'dataset_id': dataset_id,
-        'channel_id': channel_id
+    dataset_params = {
+        'organization_id': organization_id,
+        'name': dataset_name,
+        'type': 'classification',
+        'props': dataset_props
     }
+    dataset_client = DatasetClient(organization_id=organization_id, credential=credential)
+    dataset = dataset_client.datasets.create(dataset_name, 'classification', dataset_params)
+    register_dataset_items(organization_id, dataset.dataset_id, dataset_items)
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Upload VOC Dataset')
+    parser = argparse.ArgumentParser(description='Upload CIFAR10 dataset')
+    parser.add_argument('--organization_id', '-o', type=str, required=True, help='organization_id')
     parser.add_argument('--channel_id', '-c', type=str, required=True, help='channel_id')
-    parser.add_argument('--dataset_id', '-d', type=str, required=True, help='dataset_id')
+    parser.add_argument('--dataset_name', '-d', type=str, required=True, help='dataset_name')
     parser.add_argument('--label_metadata', '-l', type=str, default='label', help='label meta data')
     args = parser.parse_args()
     
+    organization_id = args.organization_id
     channel_id = args.channel_id
-    dataset_id = args.dataset_id
+    dataset_name = args.dataset_name
     label_metadata = args.label_metadata
     
-    register_dataset_items_from_datalake(dataset_id, channel_id, label_metadata)
+    register_dataset_items_from_datalake(organization_id, channel_id, dataset_name, label_metadata)
