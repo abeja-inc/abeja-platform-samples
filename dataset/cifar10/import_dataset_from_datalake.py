@@ -42,9 +42,7 @@ def create_request_element(channel_id, file_info, data_id, annotation):
     return data
 
 
-def register_dataset_items(organization_id, dataset_id, items):
-    client = DatasetClient(organization_id=organization_id, credential=credential)
-    dataset = client.get_dataset(dataset_id)
+def register_dataset_items(dataset, items):
     dataset_items = dataset.dataset_items
     for item in items:
         source_data = item['source_data']
@@ -58,7 +56,6 @@ def register_dataset_items_from_datalake(organization_id, channel_id, dataset_na
     
     print('Getting data from datalake....')
     client = DatalakeClient(organization_id=organization_id, credential=credential)
-
     channel = client.get_channel(channel_id)
    
     def to_annotation(file_info):
@@ -87,7 +84,7 @@ def register_dataset_items_from_datalake(organization_id, channel_id, dataset_na
     }
     dataset_client = DatasetClient(organization_id=organization_id, credential=credential)
     dataset = dataset_client.datasets.create(dataset_name, 'classification', dataset_params)
-    register_dataset_items(organization_id, dataset.dataset_id, dataset_items)
+    register_dataset_items(dataset, dataset_items)
 
 
 if __name__ == '__main__':
