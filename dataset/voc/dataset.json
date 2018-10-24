@@ -1,0 +1,94 @@
+{
+  "name": "PascalVOC-2007", 
+  "type": "detection", 
+  "props": {
+    "categories": [
+      {
+        "labels": [
+          {
+            "label_id": 1, 
+            "label": "aeroplane"
+          }, 
+          {
+            "label_id": 2, 
+            "label": "bicycle"
+          }, 
+          {
+            "label_id": 3, 
+            "label": "bird"
+          }, 
+          {
+            "label_id": 4, 
+            "label": "boat"
+          }, 
+          {
+            "label_id": 5, 
+            "label": "bottle"
+          }, 
+          {
+            "label_id": 6, 
+            "label": "bus"
+          }, 
+          {
+            "label_id": 7, 
+            "label": "car"
+          }, 
+          {
+            "label_id": 8, 
+            "label": "cat"
+          }, 
+          {
+            "label_id": 9, 
+            "label": "chair"
+          }, 
+          {
+            "label_id": 10, 
+            "label": "cow"
+          },
+          {
+            "label_id": 11, 
+            "label": "diningtable"
+          },
+          {
+            "label_id": 12, 
+            "label": "dog"
+          },
+          {
+            "label_id": 13, 
+            "label": "horse"
+          },
+          {
+            "label_id": 14, 
+            "label": "motorbike"
+          },
+          {
+            "label_id": 15, 
+            "label": "person"
+          },
+          {
+            "label_id": 16, 
+            "label": "pottedplant"
+          },
+          {
+            "label_id": 17, 
+            "label": "sheep"
+          },
+          {
+            "label_id": 18, 
+            "label": "sofa"
+          },
+          {
+            "label_id": 19, 
+            "label": "train"
+          },
+          {
+            "label_id": 20, 
+            "label": "tvmonitor"
+          }
+        ],
+        "category_id": 1,
+        "name": "PascalVOC-2007"
+      }
+    ]
+  }
+}

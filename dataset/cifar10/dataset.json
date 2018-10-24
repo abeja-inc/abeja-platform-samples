@@ -1,0 +1,50 @@
+{
+  "attributes": [
+    {
+      "categories": [
+        {
+          "label_id": 1,
+          "label": "airplane"
+        },
+        {
+          "label_id": 2,
+          "label": "automobile"
+        },
+        {
+          "label_id": 3,
+          "label": "bird"
+        },
+        {
+          "label_id": 4,
+          "label": "cat"
+        },
+        {
+          "label_id": 5,
+          "label": "deer"
+        },
+        {
+          "label_id": 6,
+          "label": "dog"
+        },
+        {
+          "label_id": 7,
+          "label": "frog"
+        },
+        {
+          "label_id": 8,
+          "label": "horse"
+        },
+        {
+          "label_id": 9,
+          "label": "ship"
+        },
+        {
+          "label_id": 10,
+          "label": "truck"
+        }
+      ],
+      "category_id": 1,
+      "name": "CIRAR10"
+    }
+  ]
+}
