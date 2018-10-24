@@ -15,11 +15,3 @@ VOC2012_CHANNEL_ID=`abeja datalake create-channel --name "PascalVOC-2012" --desc
 
 abeja datalake upload --channel_id ${VOC2007_CHANNEL_ID} --recursive ./tmp/VOCdevkit/VOC2007/JPEGImages/
 abeja datalake upload --channel_id ${VOC2012_CHANNEL_ID} --recursive ./tmp/VOCdevkit/VOC2012/JPEGImages/
-
-VOC2007_TRAINVAL_DATASET_ID=`abeja dataset create-dataset --name "VOCtrainval-2007" --type detection --props dataset.json | jq -r '.dataset_id'`
-VOC2007_TEST_DATASET_ID=`abeja dataset create-dataset --name "VOCtest-2007" --type detection --props dataset.json | jq -r '.dataset_id'`
-VOC2012_TRAINVAL_DATASET_ID=`abeja dataset create-dataset --name "VOCtrainval-2012" --type detection --props dataset.json | jq -r '.dataset_id'`
-
-python import_dataset_from_datalake.py --channel_id ${VOC2007_CHANNEL_ID} --dataset_id ${VOC2007_TRAINVAL_DATASET_ID} --split "trainval" --year 2007
-python import_dataset_from_datalake.py --channel_id ${VOC2007_CHANNEL_ID} --dataset_id ${VOC2007_TEST_DATASET_ID} --split "test" --year 2007
-python import_dataset_from_datalake.py --channel_id ${VOC2012_CHANNEL_ID} --dataset_id ${VOC2012_TRAINVAL_DATASET_ID} --split "trainval" --year 2012
