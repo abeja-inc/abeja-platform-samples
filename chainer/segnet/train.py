@@ -47,9 +47,10 @@ class SegmentationDatasetFromAPI(GetterDataset):
         
         client = Client()
         self.dataset = client.get_dataset(dataset_id)
-        self.dataset_list = list(dataset.dataset_items.list(prefetch=True))
-      
-        self.max_id = max([c['label_id'] 
+
+        self.dataset_list = list(self.dataset.dataset_items.list(prefetch=True))
+
+        self.max_id = max([c['label_id']
             for c in self.dataset.props['props']['attributes'][0]['categories']])
         
         self.client = APIClient()
@@ -69,7 +70,7 @@ class SegmentationDatasetFromAPI(GetterDataset):
         img = img.transpose((2, 0, 1))
         return img
 
-   def _get_image(self, i):
+    def _get_image(self, i):
         item = self.dataset_list[i]
         file_content = item.source_data[0].get_content()
         file_like_object = io.BytesIO(file_content)
@@ -78,17 +79,17 @@ class SegmentationDatasetFromAPI(GetterDataset):
 
     def _get_label(self, i):
         item = self.dataset_list[i]
-        annotations = item.attributes['segmentation']
+        annotation = item.attributes['segmentation']
         channel_id = annotation['channel_id'] 
         file_id = annotation['file_id'] 
         uri = 'datalake://{}/{}'.format(channel_id, file_id)
         ftype = 'image/png'
         
-        source = DatalakeFile(api=datalake_client, channel_id=channel_id, file_id=file_id, uri=uri, type=ftype) 
+        source = DatalakeFile(api=self.client, channel_id=channel_id, file_id=file_id, uri=uri, type=ftype)
         file_content = source.get_content()
         file_like_object = io.BytesIO(file_content)
         
-        f = Image.open(file_obj)
+        f = Image.open(file_like_object)
         try:
             img = f.convert('P')
             label = np.asarray(img, dtype=np.int32)
@@ -124,11 +125,14 @@ def handler(context):
     end_trigger = (nb_iterations, 'iteration')
 
     # Dataset
+    dataset_alias = context.datasets
     train_dataset_id = dataset_alias['train']
     val_dataset_id = dataset_alias['val']
     train = SegmentationDatasetFromAPI(train_dataset_id)
     val = SegmentationDatasetFromAPI(val_dataset_id)
     class_weight = calc_weight(train)
+
+    print(class_weight)
     
     train = TransformDataset(train, transform)
 
