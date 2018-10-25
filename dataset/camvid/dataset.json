@@ -1,0 +1,54 @@
+{
+  "attributes": [
+    {
+      "categories": [
+        {
+          "label_id": 1,
+          "label": "Sky"
+        },
+        {
+          "label_id": 2,
+          "label": "Building"
+        },
+        {
+          "label_id": 3,
+          "label": "Pole"
+        },
+        {
+          "label_id": 4,
+          "label": "Road"
+        },
+        {
+          "label_id": 5,
+          "label": "Pavement"
+        },
+        {
+          "label_id": 6,
+          "label": "Tree"
+        },
+        {
+          "label_id": 7,
+          "label": "SignSymbol"
+        },
+        {
+          "label_id": 8,
+          "label": "Fence"
+        },
+        {
+          "label_id": 9,
+          "label": "Car"
+        },
+        {
+          "label_id": 10,
+          "label": "Pedestrian"
+        },
+        {
+          "label_id": 11,
+          "label": "Bicyclist"
+        }
+      ],
+      "category_id": 1,
+      "name": "CamVid"
+    }
+  ]
+}
