@@ -1,0 +1,5 @@
+pillow==4.2.1
+numpy==1.14.2
+chainer==4.5.0
+chainercv==0.10.0
+tensorboard-chainer==0.2.8.1
