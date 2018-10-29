@@ -1,3 +1,9 @@
+"""Training code of Single Shot Multibox Detector
+Original author: Preferred Networks, Inc.
+https://github.com/chainer/chainercv/blob/master/examples/ssd/train.py
+Updated by: ABEJA, Inc.
+"""
+
 import os
 import io
 import copy
