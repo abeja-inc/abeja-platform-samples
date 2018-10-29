@@ -1,3 +1,9 @@
+"""Training code for CIFAR10 dataset
+Original author: Preferred Networks, Inc.
+https://github.com/chainer/chainer/blob/master/examples/cifar/train_cifar.py
+Updated by: ABEJA, Inc.
+"""
+
 import os
 import io
 import numpy as np

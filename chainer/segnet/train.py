@@ -1,3 +1,9 @@
+"""Training code of SegNet
+Original author: Preferred Networks, Inc.
+https://github.com/chainer/chainercv/blob/master/examples/ssd/train.p://github.com/chainer/chainercv/blob/master/examples/segnet/train.py
+Updated by: ABEJA, Inc.
+"""
+
 import os
 import io
 import numpy as np
