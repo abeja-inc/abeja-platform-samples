@@ -1,1 +1,1 @@
-# abeja-platform-samples
+# ABEJA Platform samples for Chainer
