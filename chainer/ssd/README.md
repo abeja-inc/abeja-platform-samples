@@ -1,5 +1,43 @@
 # Examples of Single Shot Multibox Detector [1]
 
+## Train
+
+### Dataset preperation
+
+https://github.com/abeja-inc/abeja-platform-samples/tree/master/dataset/voc
+
+### Training
+
+The training setting sample is here. `{JOB_NAME}` is arbitrarily name that you can define. `{PascalVOC2007-trainval_ID}`, `{PascalVOC2012-trainval_ID}` and `{PascalVOC2007-test_ID}` are described in ABEJA Platform Console.
+```
+name: {JOB_NAME}
+handler: train:handler
+image: abeja-inc/deepgpu:0.1.0
+datasets:
+  trainval2007: '{PascalVOC2007-trainval_ID}'
+  trainval2012: '{PascalVOC2012-trainval_ID}'
+  test2007: '{PascalVOC2007-test_ID}'
+params:
+  USE_GPU: '0'
+```
+
+You can train the model with the following code using ABEJA CLI. 
+```
+$ abeja training create-job-definition
+$ abeja training create-version
+$ abeja training create-job --version {JOB_VERSION}
+```
+
+`{JOB_VERSION}` is target code version. You can get it from output of `create-version` or ABEJA Platform Console.
+
+## Evaluation
+
+Not yet.
+
+## Prediction
+
+Coming soon.
+
 ## Performance
 PASCAL VOC2007 Test
 
@@ -11,40 +49,6 @@ PASCAL VOC2007 Test
 Scores are mean Average Precision (mAP) with PASCAL VOC2007 metric.
 
 \*: We set batchsize to 24 because of memory limitation. The original paper used 32.
-
-## Demo
-Detect objects in an given image. This demo downloads Pascal VOC pretrained model automatically if a pretrained model path is not given.
-```
-$ python demo.py [--model ssd300|ssd512] [--gpu <gpu>] [--pretrained-model <model_path>] <image>.jpg
-```
-
-## Convert Caffe model
-Convert `*.caffemodel` to `*.npz`. Some layers are renamed to fit ChainerCV. SSD300 and SSD512 are supported.
-```
-$ python caffe2npz <source>.caffemodel <target>.npz
-```
-
-## Evaluation
-The evaluation can be conducted using [`chainercv/examples/detection/eval_voc07.py`](https://github.com/chainer/chainercv/blob/master/examples/detection).
-
-## Train
-You can train the model with the following code.
-Note that this code requires `cv2` module.
-```
-$ python train.py [--model ssd300|ssd512] [--batchsize <batchsize>] [--gpu <gpu>]
-```
-Note that this training process sometimes stucks due to `cv2` issue.
-For the details and workaround, please see [Chainer's Tips and FAQs](https://docs.chainer.org/en/stable/tips.html#my-training-process-gets-stuck-when-using-multiprocessiterator).
-
-If you want to use multiple GPUs, use `train_multi.py`.
-Note that this code requires `chainermn` module.
-```
-$ mpi4exec -n <#gpu> python train_multi.py [--model ssd300|ssd512] [--batchsize <batchsize>] [--test-batchsize <batchsize>]
-```
-
-You can download weights that were trained by ChainerCV.
-- [SSD300](https://chainercv-models.preferred.jp/ssd300_voc0712_trained_2017_08_08.npz)
-- [SSD512](https://chainercv-models.preferred.jp/ssd512_voc0712_trained_2017_08_08.npz)
 
 ## References
 1. Wei Liu et al. "SSD: Single shot multibox detector" ECCV 2016.

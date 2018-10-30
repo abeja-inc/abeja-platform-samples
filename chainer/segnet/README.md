@@ -1,27 +1,46 @@
 SegNet
 ======
 
-# Preparation
+This is a SegNet [1,2] model example for semantic segmenation. This code is based on [chainercv](https://github.com/chainer/chainercv) example.
 
-Please create `class_weight.npy` using calc_weight.py first. Just run:
+## Train
 
+### Dataset preperation
+
+The CamVid dataset example.
+
+https://github.com/abeja-inc/abeja-platform-samples/tree/master/dataset/camvid
+
+### Training
+
+The training setting sample is here. `{JOB_NAME}` is arbitrarily name that you can define. `{CamVid-train_ID}`, `{CamVid-val_ID}` are described in ABEJA Platform Console.
 ```
-$ python calc_weight.py
+name: {JOB_NAME}
+handler: train:handler
+image: abeja-inc/deepgpu:0.1.0
+datasets:
+  train: '{CamVid-train_ID}'
+  val: '{CamVid-val_ID}'
+params:
+  USE_GPU: '0'
 ```
 
-# Start training
-
-First, move to this directory (i.e., `examples/segnet`) and run:
-
+You can train the model with the following code using ABEJA CLI. 
 ```
-$ python train.py [--gpu <gpu>]
+$ abeja training create-job-definition
+$ abeja training create-version
+$ abeja training create-job --version {JOB_VERSION}
 ```
 
-PlotReport extension uses matplotlib. If you got `RuntimeError: Invalid DISPLAY variable` error on Linux environment, adding an environment variable specification is recommended:
+`{JOB_VERSION}` is target code version. You can get it from output of `create-version` or ABEJA Platform Console.
 
-```
-$ MPLBACKEND=Agg python train.py [--gpu <gpu>]
-```
+## Evaluation
+
+Not yet.
+
+## Prediction
+
+Coming soon.
 
 ## NOTE
 
@@ -37,15 +56,6 @@ We used the completely same parameters for all settings.
 | ChainerCV      | MomentumSGD | 0.1           | 0.9      | 0.0005       | [segnet_basic.py](https://github.com/chainer/chainercv/tree/master/chainercv/links/model/segnet/segnet_basic.py) |
 | Official       | MomentumSGD | 0.1           | 0.9      | 0.0005       | [segnet_basic_train.prototxt](https://github.com/alexgkendall/SegNet-Tutorial/blob/master/Models/segnet_basic_train.prototxt) |
 
-# Quick Demo
-
-Here is a quick demo using our pretrained weights. The pretrained model is automatically downloaded from the internet.
-
-```
-$ wget https://raw.githubusercontent.com/alexgkendall/SegNet-Tutorial/master/CamVid/test/0001TP_008550.png
-$ python demo.py [--gpu <gpu>] [--pretrained-model <model_path>] 0001TP_008550.png
-```
-
 ## Comparizon with the paper results
 
 | Implementation | Global accuracy | Class accuracy | mean IoU   |
@@ -60,4 +70,5 @@ The evaluation can be conducted using [`chainercv/examples/semantic_segmentation
 
 1. Vijay Badrinarayanan, Alex Kendall and Roberto Cipolla "SegNet: A Deep Convolutional Encoder-Decoder Architecture for Image Segmentation." PAMI, 2017.
 2. Vijay Badrinarayanan, Ankur Handa and Roberto Cipolla "SegNet: A Deep Convolutional Encoder-Decoder Architecture for Robust Semantic Pixel-Wise Labelling." arXiv preprint arXiv:1505.07293, 2015.
-3. [Original implementation](http://mi.eng.cam.ac.uk/projects/segnet/tutorial.html)
+3. [Original implementation 1](http://mi.eng.cam.ac.uk/projects/segnet/tutorial.html)
+4. [Original implementation 2](https://github.com/chainer/chainercv/tree/master/examples/segnet)
