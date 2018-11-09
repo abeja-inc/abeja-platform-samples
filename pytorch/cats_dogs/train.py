@@ -195,4 +195,4 @@ def handler(context):
         writer.add_scalar('main/validation/loss', test_total_loss, epoch+1)
         writer.add_scalar('main/validation/acc', test_total_acc, epoch+1)
     
-    torch.save(net.state_dict(), 'model.pth')
+    torch.save(net.state_dict(), os.path.join(ABEJA_TRAINING_RESULT_DIR, 'model.pth'))
