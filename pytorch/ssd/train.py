@@ -45,14 +45,19 @@ def adjust_learning_rate(optimizer, gamma, step):
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
+def eval(testloader, ssd_net):
+    pass
+
 def handler(context):
     dataset_alias = context.datasets
     
     trainval_2007_dataset_id = dataset_alias['trainval2007']
     trainval_2012_dataset_id = dataset_alias['trainval2012']
+    #test_2007_dataset_id = dataset_alias['trainval2007']
 
     trainval_2007_dataset = list(load_dataset_from_api(trainval_2007_dataset_id))
     trainval_2012_dataset = list(load_dataset_from_api(trainval_2012_dataset_id))
+    #test_2007_dataset = list(load_dataset_from_api(test_2007_dataset_id))
 
     num_classes = 21
     lr_steps = (80000, 100000, 120000)
@@ -61,7 +66,9 @@ def handler(context):
     
     trainval_2007 = DetectionDatasetFromAPI(trainval_2007_dataset, transform=SSDAugmentation(min_dim, MEANS))
     trainval_2012 = DetectionDatasetFromAPI(trainval_2012_dataset, transform=SSDAugmentation(min_dim, MEANS))
-    dataset = ConcatenatedDataset(trainval_2007, trainval_2012)
+    #test_2007 = DetectionDatasetFromAPI(trainval_2007_dataset, transform=SSDAugmentation(min_dim, MEANS))
+    train_dataset = ConcatenatedDataset(trainval_2007, trainval_2012)
+    #test_dataset = test_2007
     
     priorbox = PriorBox(min_dim, PARAMS)
     with torch.no_grad():
@@ -84,25 +91,25 @@ def handler(context):
     ssd_net.train()
 
     # loss counters
-    epoch = 0
-    print('Loading the dataset...')
-
-    epoch_size = len(dataset) // batch_size
-
     step_index = 0
 
-    data_loader = data.DataLoader(dataset, batch_size,
+    trainloader = data.DataLoader(train_dataset, batch_size,
                                   num_workers=0,
                                   shuffle=True, collate_fn=tools.detection_collate,
                                   pin_memory=True)
 
+    #testloader = data.DataLoader(test_dataset, batch_size,
+    #                             num_workers=0,
+    #                             shuffle=False, collate_fn=tools.detection_collate,
+    #                             pin_memory=True)
+
     statistics = Statistics(max_iter)
     
     # create batch iterator
-    iteration = 0
-    while iteration < max_iter:
-        for images, targets in data_loader:
-            if iteration >= max_iter:
+    iteration = 1
+    while iteration <= max_iter:
+        for images, targets in trainloader:
+            if iteration > max_iter:
                 break
 
             if iteration in lr_steps:
@@ -129,6 +136,9 @@ def handler(context):
                 writer.add_scalar('main/loss', loss.item(), iteration)
                 writer.add_scalar('main/loc_loss', loss_l.item(), iteration)
                 writer.add_scalar('main/conf_loss', loss_c.item(), iteration)
+
+            #if iteration % 10000 == 0:
+            #    eval(testloader, ssd_net)
 
             iteration += 1
     torch.save(ssd_net.state_dict(), os.path.join(ABEJA_TRAINING_RESULT_DIR, 'model.pth'))
