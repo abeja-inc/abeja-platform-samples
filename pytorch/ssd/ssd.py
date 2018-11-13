@@ -1,10 +1,11 @@
+import os
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable
-from layers import *
-from data import voc, coco
-import os
+
+from layers.modules import L2Norm 
+from layers.modules import MultiBoxLoss
 
 
 class SSD(nn.Module):

@@ -1,20 +1,15 @@
 import os
-import sys
-import numpy as np
 
 import torch
-from torch.autograd import Variable
-import torch.nn as nn
 import torch.optim as optim
-import torch.backends.cudnn as cudnn
-import torch.nn.init as init
 import torch.utils.data as data
 
-from data import *
-from layers import *
+import tools
+from config import MEANS, PARAMS
 
 from ssd import build_ssd
 from augmentations import SSDAugmentation
+from layers.functions import PriorBox
 from layers.modules import MultiBoxLoss
 
 from dataset import load_dataset_from_api
@@ -68,7 +63,7 @@ def handler(context):
     trainval_2012 = DetectionDatasetFromAPI(trainval_2012_dataset, transform=SSDAugmentation(min_dim, MEANS))
     dataset = ConcatenatedDataset(trainval_2007, trainval_2012)
     
-    priorbox = PriorBox((coco, voc)[num_classes == 21])
+    priorbox = PriorBox(min_dim, PARAMS)
     with torch.no_grad():
         priors = priorbox.forward().to(device)
 
@@ -84,7 +79,7 @@ def handler(context):
     ssd_net.vgg.load_state_dict(vgg_weights)
 
     optimizer = optim.SGD(ssd_net.parameters(), lr=lr, momentum=0.9, weight_decay=5e-4)
-    criterion = MultiBoxLoss(num_classes, 0.5, True, 0, True, 3, 0.5, False, device)
+    criterion = MultiBoxLoss(num_classes, 0.5, True, 0, True, 3, 0.5, False, PARAMS['variance'], device)
 
     ssd_net.train()
 
@@ -98,7 +93,7 @@ def handler(context):
 
     data_loader = data.DataLoader(dataset, batch_size,
                                   num_workers=0,
-                                  shuffle=True, collate_fn=detection_collate,
+                                  shuffle=True, collate_fn=tools.detection_collate,
                                   pin_memory=True)
 
     statistics = Statistics(max_iter)
