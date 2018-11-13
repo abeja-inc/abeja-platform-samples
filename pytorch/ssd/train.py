@@ -28,7 +28,7 @@ writer = SummaryWriter(log_dir=log_path)
 use_cuda = USE_GPU >= 0 and torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
 
-batch_size = 4
+batch_size = 32
 lr = 1e-3
 num_classes = 21
 lr_steps = (80000, 100000, 120000)
