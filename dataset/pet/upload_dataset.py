@@ -148,7 +148,7 @@ def register_dataset(organization_id, datalake_name, dataset_name, dataset_json_
     upload_data(channel, dataset_trainval.dataset_items, pet_dataset_trainval, is_train=True, max_workers=max_workers)
 
     print('start uploading test..')
-    upload_data(channel, dataset_trainval.dataset_items, pet_dataset_test, is_train=False, max_workers=max_workers)
+    upload_data(channel, dataset_test.dataset_items, pet_dataset_test, is_train=False, max_workers=max_workers)
 
     print('finished!')
 
