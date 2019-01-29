@@ -7,5 +7,5 @@ link: http://www.robots.ox.ac.uk/~vgg/data/pets/
 # Usage
 
 ```
-python upload_dataset.py -o 123456789 --datalake_name "pet-dataset" --dataset_name "pet-dataset" --format_file dataset.json
+python upload_dataset.py -o 123456789 --datalake_name "pet-dataset" --dataset_name "pet-dataset" --format_file dataset.json --max_workers 4
 ```

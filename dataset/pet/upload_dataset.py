@@ -159,7 +159,7 @@ if __name__ == '__main__':
     parser.add_argument('--datalake_name', type=str, required=True, help='datalake_name')
     parser.add_argument('--dataset_name', type=str, required=True, help='dataset_name')
     parser.add_argument('--format_file', type=str, default='dataset.json', help='path of dataset.json')
-    parser.add_argument('--max_workers', type=int, default=1)
+    parser.add_argument('--max_workers', type=int, default=4)
     args = parser.parse_args()
 
     organization_id = args.organization_id
