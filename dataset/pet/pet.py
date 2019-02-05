@@ -77,6 +77,10 @@ def _parse_txt(filepath, image_root_dir, xml_root_dir):
             size = dict(width=-1, height=-1)
             bbox = dict(xmin=-1, ymin=-1, xmax=-1, ymax=-1)
             annotated = False
+        except TypeError as e:
+            print('parse error at:', xml_filepath)
+            print(e)
+            continue
 
         size_int = dict(width=int(size['width']), height=int(size['height']))
         bbox_int = dict(xmin=int(bbox['xmin']),
@@ -103,6 +107,7 @@ def _parse_xml(xml_filepath):
         txt = f.read()
     xml_dict = xmltodict.parse(txt)
     size_dict = xml_dict['annotation']['size']
+    
     bbdict = xml_dict['annotation']['object']['bndbox']
     return size_dict, bbdict
 
@@ -232,7 +237,7 @@ cat_breeds = {
 
 if __name__ == "__main__":
     dataset_trainval, dataset_test = load_data()
-    trainval_has_size = list(filter(lambda x: x.size is None, dataset_trainval))
+    trainval_has_size = list(filter(lambda x: x.annotated, dataset_trainval))
     print(f'trainval: {len(dataset_trainval)} with annotation {len(trainval_has_size)}')
-    test_has_size = list(filter(lambda x: x.size is None, dataset_test))
+    test_has_size = list(filter(lambda x: x.annotated, dataset_test))
     print(f'test: {len(dataset_test)} with annotation {len(test_has_size)}')
