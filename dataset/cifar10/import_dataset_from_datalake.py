@@ -61,10 +61,10 @@ def register_dataset_items_from_datalake(organization_id, channel_id, dataset_na
     def to_annotation(file_info):
         label = file_info.metadata[label_metadata_key]
         label_id = label2id[label]
-        return {label_metadata_key: label, 'label_id': label_id}
+        return [{label_metadata_key: label, 'label_id': label_id, 'category_id': 0}]
 
     file_iter = channel.list_files(limit=1000, prefetch=False)
-    label2id = {x['label']: x['label_id'] for x in dataset_props['attributes'][0]['categories']}
+    label2id = {x['label']: x['label_id'] for x in dataset_props['props']['categories'][0]['labels']}
 
     dataset_items = []
     for file_info in file_iter:
@@ -74,16 +74,10 @@ def register_dataset_items_from_datalake(organization_id, channel_id, dataset_na
         dataset_items.append(item)
         if len(dataset_items) % 1000 == 0:
             print(len(dataset_items))
-    
+
     print('Registering dataset items....')
-    dataset_params = {
-        'organization_id': organization_id,
-        'name': dataset_name,
-        'type': 'classification',
-        'props': dataset_props
-    }
     dataset_client = DatasetClient(organization_id=organization_id, credential=credential)
-    dataset = dataset_client.datasets.create(dataset_name, 'classification', dataset_params)
+    dataset = dataset_client.datasets.create(dataset_name, dataset_props['type'], dataset_props['props'])
     register_dataset_items(dataset, dataset_items)
 
 
