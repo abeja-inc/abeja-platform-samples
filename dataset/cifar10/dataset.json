@@ -1,6 +1,6 @@
 {
-  "name": "CIFAR10", 
-  "type": "classification", 
+  "name": "CIFAR10",
+  "type": "classification",
   "props": {
      "categories": [
        {

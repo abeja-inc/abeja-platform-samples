@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 from PIL import Image
 
+
 def unpickle(file):
     with open(file, 'rb') as fo:
         dict = pickle.load(fo, encoding='bytes')
@@ -13,16 +14,18 @@ def unpickle(file):
         dict[new_k] = dict.pop(k)
     return dict
 
+
 def conv_data2image(data):
-    return np.rollaxis(data.reshape((3,32,32)),0,3)
+    return np.rollaxis(data.reshape((3, 32, 32)), 0, 3)
+
 
 def get_cifar10(folder):
-    tr_data = np.empty((0,32*32*3))
+    tr_data = np.empty((0, 32*32*3))
     tr_labels = np.empty(1)
     '''
     32x32x3
     '''
-    for i in range(1,6):
+    for i in range(1, 6):
         fname = os.path.join(folder, "%s%d" % ("data_batch_", i))
         data_dict = unpickle(fname)
         if i == 1:
@@ -40,6 +43,7 @@ def get_cifar10(folder):
     label_names = [n.decode(encoding='utf-8') for n in bm['label_names']]
     return tr_data, tr_labels, te_data, te_labels, label_names
 
+
 def save_images(images, labels, files, names, out_dir):
     for img, lbl, f in zip(tqdm.tqdm(images), labels, files):
         target_name = os.path.join(out_dir, names[lbl], f)
@@ -50,11 +54,12 @@ def save_images(images, labels, files, names, out_dir):
 
 if __name__ == '__main__':
     datapath = "./cifar-10-batches-py"
-    tr_data10, tr_labels10, te_data10, te_labels10, label_names10 = get_cifar10(datapath)
+    tr_data10, tr_labels10, te_data10, te_labels10, label_names10 = \
+        get_cifar10(datapath)
 
     tr_files10 = ['{0:06d}.png'.format(i) for i in range(len(tr_data10))]
     te_files10 = ['{0:06d}.png'.format(i) for i in range(len(te_data10))]
-        
+
     os.makedirs('train', exist_ok=True)
     os.makedirs('test', exist_ok=True)
 
