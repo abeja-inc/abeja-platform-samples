@@ -56,19 +56,22 @@ $ python import_dataset_from_datalake.py \
           -c {PascalVOC-2007_ID} \
           -d PascalVOC2007-trainval \
           --split trainval \
-          --year 2007
+          --year 2007 \
+          --max_workers 4
+
+$ python import_dataset_from_datalake.py \
+          -o {ORGANIZATION_ID} \
+          -c {PascalVOC-2007_ID} \
+          -d PascalVOC2007-test \
+          --split test \
+          --year 2007 \
+          --max_workers 4
 
 $ python import_dataset_from_datalake.py \
           -o {ORGANIZATION_ID} \
           -c {PascalVOC-2012_ID} \
           -d PascalVOC2012-trainval \
           --split trainval \
-          --year 2012
-          
-$ python import_dataset_from_datalake.py \
-          -o {ORGANIZATION_ID} \
-          -c {PascalVOC-2007_ID} \
-          -d PascalVOC2007-test \
-          --split test \
-          --year 2007
+          --year 2012 \
+          --max_workers 4
 ```

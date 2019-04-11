@@ -113,8 +113,8 @@ class VOCBboxDataset:
             rect = {'xmin': xmin, 'ymin': ymin, 'xmax': xmax, 'ymax': ymax}
             ret.append({
                 'rect': rect, 
-                'category_id': 1, 
-                'label_id': int(lbl) + 1, 
+                'category_id': 0, 
+                'label_id': int(lbl), 
                 'label': voc_utils.voc_bbox_label_names[lbl], 
                 'difficult': bool(d)}
             )
