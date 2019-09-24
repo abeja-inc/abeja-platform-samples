@@ -25,7 +25,7 @@ credential = {
 }
 
 
-def create_request_element(channel_id, file_info, annotation):
+def create_request_element(channel_id, file_info, annotation, attribute_type):
     """
     create dataset item from datalake file
 
@@ -49,7 +49,7 @@ def create_request_element(channel_id, file_info, annotation):
             }
         ],
         'attributes': {
-            'detection': annotation
+            attribute_type: annotation
         }
     }
     return attributes
@@ -63,28 +63,40 @@ def register_dataset_items(dataset, items):
         dataset_items.create(source_data=source_data, attributes=attributes)
 
 
-def create_dataset(dataset_client, name, props):
-    res = dataset_client.datasets.create(name, type='detection', props=props)
+def create_dataset(dataset_client, name, props, attribute_type):
+    res = dataset_client.datasets.create(name, type=attribute_type, props=props)
     dataset_id = res.dataset_id
     return dataset_id
 
 
-def build_attributes(datum: PetData):
-    attributes = {
-        "detection": [{
-            'category_id': 0,
-            'label_id': datum.class_id,
-            'label': int_to_category[datum.class_id],
-            'rect': datum.bbox,
-            'species': datum.species,
-            'size': datum.size
-        }]
-    }
+def build_attributes(datum: PetData, attribute_type):
+    if attribute_type == 'detection':
+        attributes = {
+            "detection": [{
+                'category_id': 0,
+                'label_id': datum.class_id,
+                'label': int_to_category[datum.class_id],
+                'rect': datum.bbox,
+                'species': datum.species,
+                'size': datum.size
+            }]
+        }
+        return attribute
+    if attribute_type == 'classification':
+        attributes = {
+            "classification": [{
+                'category_id': 0,
+                'label_id': datum.class_id,
+                'label': int_to_category[datum.class_id],
+                'species': datum.species,
+                'size': datum.size
+            }]
+        }
+        return attributes
+    raise NotImplementedError(f'attribute_type: {attribute_type} is not implemented yet')
 
-    return attributes
 
-
-def upload_datum(channel: Channel, dataset_items: DatasetItems, datum: PetData, is_train: bool):
+def upload_datum(channel: Channel, dataset_items: DatasetItems, datum: PetData, is_train: bool, attribute_type:str):
     # upload file to the channel
     metadata = {
         'filename': PurePath(datum.image_path).name,
@@ -94,7 +106,7 @@ def upload_datum(channel: Channel, dataset_items: DatasetItems, datum: PetData, 
     response = channel.upload_file(datum.image_path, metadata=metadata)
 
     # upload item to the datase
-    attributes = build_attributes(datum)
+    attributes = build_attributes(datum, attribute_type)
     source_data = [{
         "data_type": response.content_type,
         "data_uri": response.uri,
@@ -105,10 +117,10 @@ def upload_datum(channel: Channel, dataset_items: DatasetItems, datum: PetData, 
 
 
 def upload_data(channel: Channel, dataset_items: DatasetItems, pet_dataset: List[PetData], is_train: bool,
-                max_workers: int = 1):
+                max_workers: int = 1, attribute_type: str='detection'):
     if max_workers > 1:
         with ThreadPoolExecutor(max_workers) as executor:
-            _f = lambda x: upload_datum(channel, dataset_items, x, is_train)
+            _f = lambda x: upload_datum(channel, dataset_items, x, is_train, attribute_type)
             results = list(tqdm(executor.map(_f, pet_dataset), total=len(pet_dataset)))
         return results
 
@@ -116,7 +128,7 @@ def upload_data(channel: Channel, dataset_items: DatasetItems, pet_dataset: List
     return results
 
 
-def register_dataset(organization_id, datalake_name, dataset_name, dataset_json_path, max_workers):
+def register_dataset(organization_id, datalake_name, dataset_name, dataset_json_path, max_workers, attribute_type):
     """
     register datasets from datalake channel
     """
@@ -145,10 +157,10 @@ def register_dataset(organization_id, datalake_name, dataset_name, dataset_json_
     print(f'test dataset created: {dataset_test.dataset_id}')
 
     print('start uploading trainval..')
-    upload_data(channel, dataset_trainval.dataset_items, pet_dataset_trainval, is_train=True, max_workers=max_workers)
+    upload_data(channel, dataset_trainval.dataset_items, pet_dataset_trainval, is_train=True, max_workers=max_workers, attribute_type=attribute_type)
 
     print('start uploading test..')
-    upload_data(channel, dataset_test.dataset_items, pet_dataset_test, is_train=False, max_workers=max_workers)
+    upload_data(channel, dataset_test.dataset_items, pet_dataset_test, is_train=False, max_workers=max_workers, attribute_type=attribute_type)
 
     print('finished!')
 
@@ -158,8 +170,9 @@ if __name__ == '__main__':
     parser.add_argument('--organization_id', '-o', type=str, required=True, help='organization_id')
     parser.add_argument('--datalake_name', type=str, required=True, help='datalake_name')
     parser.add_argument('--dataset_name', type=str, required=True, help='dataset_name')
-    parser.add_argument('--format_file', type=str, default='dataset.json', help='path of dataset.json')
+    parser.add_argument('--format_file', type=str, default='dataset_detection.json', help='path of dataset.json')
     parser.add_argument('--max_workers', type=int, default=4)
+    parser.add_argument('--attribute_type', type=str, default='detection')
     args = parser.parse_args()
 
     organization_id = args.organization_id
@@ -167,5 +180,6 @@ if __name__ == '__main__':
     dataset_name = args.dataset_name
     dataset_json_path = args.format_file
     max_workers = args.max_workers
+    attribute_type = args.attribute_type
 
-    register_dataset(organization_id, datalake_name, dataset_name, dataset_json_path, max_workers)
+    register_dataset(organization_id, datalake_name, dataset_name, dataset_json_path, max_workers, attribute_type)
