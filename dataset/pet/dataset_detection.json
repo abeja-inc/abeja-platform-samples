@@ -1,0 +1,177 @@
+{
+  "name": "The Oxford-IIIT Pet Dataset",
+  "type": "detection",
+  "props": {
+    "categories": [
+      {
+        "labels": [
+          {
+            "label": "abyssinian",
+            "label_id": 1
+          },
+          {
+            "label": "american_bulldog",
+            "label_id": 2
+          },
+          {
+            "label": "american_pit_bull_terrier",
+            "label_id": 3
+          },
+          {
+            "label": "basset_hound",
+            "label_id": 4
+          },
+          {
+            "label": "beagle",
+            "label_id": 5
+          },
+          {
+            "label": "bengal",
+            "label_id": 6
+          },
+          {
+            "label": "birman",
+            "label_id": 7
+          },
+          {
+            "label": "bombay",
+            "label_id": 8
+          },
+          {
+            "label": "boxer",
+            "label_id": 9
+          },
+          {
+            "label": "british_shorthair",
+            "label_id": 10
+          },
+          {
+            "label": "chihuahua",
+            "label_id": 11
+          },
+          {
+            "label": "egyptian_mau",
+            "label_id": 12
+          },
+          {
+            "label": "english_cocker_spaniel",
+            "label_id": 13
+          },
+          {
+            "label": "english_setter",
+            "label_id": 14
+          },
+          {
+            "label": "german_shorthaired",
+            "label_id": 15
+          },
+          {
+            "label": "great_pyrenees",
+            "label_id": 16
+          },
+          {
+            "label": "havanese",
+            "label_id": 17
+          },
+          {
+            "label": "japanese_chin",
+            "label_id": 18
+          },
+          {
+            "label": "keeshond",
+            "label_id": 19
+          },
+          {
+            "label": "leonberger",
+            "label_id": 20
+          },
+          {
+            "label": "maine_coon",
+            "label_id": 21
+          },
+          {
+            "label": "miniature_pinscher",
+            "label_id": 22
+          },
+          {
+            "label": "newfoundland",
+            "label_id": 23
+          },
+          {
+            "label": "persian",
+            "label_id": 24
+          },
+          {
+            "label": "pomeranian",
+            "label_id": 25
+          },
+          {
+            "label": "pug",
+            "label_id": 26
+          },
+          {
+            "label": "ragdoll",
+            "label_id": 27
+          },
+          {
+            "label": "russian_blue",
+            "label_id": 28
+          },
+          {
+            "label": "saint_bernard",
+            "label_id": 29
+          },
+          {
+            "label": "samoyed",
+            "label_id": 30
+          },
+          {
+            "label": "scottish_terrier",
+            "label_id": 31
+          },
+          {
+            "label": "shiba_inu",
+            "label_id": 32
+          },
+          {
+            "label": "siamese",
+            "label_id": 33
+          },
+          {
+            "label": "sphynx",
+            "label_id": 34
+          },
+          {
+            "label": "staffordshire_bull_terrier",
+            "label_id": 35
+          },
+          {
+            "label": "wheaten_terrier",
+            "label_id": 36
+          },
+          {
+            "label": "yorkshire_terrier",
+            "label_id": 37
+          }
+        ],
+        "category_id": 0,
+        "name": "pet class"
+      },
+      {
+        "labels": [
+          {
+            "label": "cat",
+            "label_id": 38
+          },
+          {
+            "label": "dog",
+            "label_id": 39
+          }
+        ],
+        "category_id": 1,
+        "name": "species"
+      }
+    ]
+  }
+}
+

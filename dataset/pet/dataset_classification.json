@@ -1,6 +1,6 @@
 {
   "name": "The Oxford-IIIT Pet Dataset",
-  "type": "detection",
+  "type": "classification",
   "props": {
     "categories": [
       {
@@ -161,11 +161,11 @@
         "labels": [
           {
             "label": "cat",
-            "label_id": 1
+            "label_id": 38
           },
           {
             "label": "dog",
-            "label_id": 2
+            "label_id": 39
           }
         ],
         "category_id": 1,
