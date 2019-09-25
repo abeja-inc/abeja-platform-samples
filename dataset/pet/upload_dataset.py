@@ -81,7 +81,7 @@ def build_attributes(datum: PetData, attribute_type):
                 'size': datum.size
             }]
         }
-        return attribute
+        return attributes
     if attribute_type == 'classification':
         attributes = {
             "classification": [{
@@ -124,7 +124,7 @@ def upload_data(channel: Channel, dataset_items: DatasetItems, pet_dataset: List
             results = list(tqdm(executor.map(_f, pet_dataset), total=len(pet_dataset)))
         return results
 
-    results = [upload_datum(channel, dataset_items, datum, is_train) for datum in tqdm(pet_dataset)]
+    results = [upload_datum(channel, dataset_items, datum, is_train, attribute_type) for datum in tqdm(pet_dataset)]
     return results
 
 
