@@ -1,0 +1,7 @@
+FROM abeja/base:19.10
+
+RUN python -m pip --no-cache-dir install --upgrade tensorflow==2.0.0
+
+# If it is not installed correctly, the build will fail.
+# You can comment out if you don't need it.
+RUN python -c "import tensorflow as tf;print(tf.reduce_sum(tf.random.normal([1000, 1000])))"

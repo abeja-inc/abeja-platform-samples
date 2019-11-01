@@ -1,0 +1,11 @@
+FROM abeja/base-cuda101:19.10
+
+RUN python -m pip --no-cache-dir install --upgrade numpy
+RUN python -m pip --no-cache-dir install --upgrade --pre torch torchvision -f https://download.pytorch.org/whl/nightly/cu101/torch_nightly.html
+
+# If it is not installed correctly, the build will fail.
+# You can comment out if you don't need it.
+# and To use a GPU, Docker default runtime must be nvidia.
+RUN python -c "import torch; x = torch.rand(5, 3); print(x) "
+RUN nvidia-smi
+RUN python -c "import torch; torch.cuda.is_available()"
