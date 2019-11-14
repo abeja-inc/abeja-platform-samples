@@ -1,0 +1,11 @@
+name: support
+handler: train:handler
+image: abeja-inc/all-gpu:18.10
+# params:
+#   param1: value1
+#   parma2: value2
+datasets:
+  train: 1862760093230
+  test: 1862760093230
+# ignores:
+#   - .gitignore
