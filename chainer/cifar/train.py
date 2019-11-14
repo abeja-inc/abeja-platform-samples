@@ -1,9 +1,3 @@
-"""Training code for CIFAR10 dataset
-Original author: Preferred Networks, Inc.
-https://github.com/chainer/chainer/blob/master/examples/cifar/train_cifar.py
-Updated by: ABEJA, Inc.
-"""
-
 import os
 import io
 import numpy as np
@@ -16,7 +10,7 @@ from chainer import training
 from chainer.training import extensions
 from chainer.training import triggers
 
-import models.VGG
+import utils.VGG
 
 from abeja.datasets import Client
 
@@ -49,7 +43,7 @@ def handler(context):
     train = ImageDatasetFromAPI(train_data, train=True)     
     test = ImageDatasetFromAPI(test_data)
     
-    net = models.VGG.VGG(class_labels)
+    net = utils.VGG.VGG(class_labels)
     model = L.Classifier(net)
 
     if USE_GPU >= 0:
