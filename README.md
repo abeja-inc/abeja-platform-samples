@@ -1,7 +1,14 @@
 # ABEJA Platform Samples
 
-TODO: English Documentation
+このリポジトリはABEJA Platform上で利用できるサンプル集です。
 
-# Abstract
+## Table of contents
+### Auto-Annotation
+- ABEJA Platform Annotation Toolで利用できる事前推論用ファイル
+### Dataset
+- ABEJA Platformで利用できる公開済みのDataset集
+### Training
+- 学習時に利用できるTraining用のサンプル集
+### Notebook
+- Notebookを利用した処理、学習ジョブの実行などのサンプル集
 
-このリポジトリはABEJA Platform上で動作するサンプル集です。ベンチマークデータセットのABEJA Platformでのロードおよびいくつかの学習サンプルを含みます。
