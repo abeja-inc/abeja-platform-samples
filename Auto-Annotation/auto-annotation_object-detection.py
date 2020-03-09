@@ -6,12 +6,12 @@ from tqdm import tqdm
 from abeja.datalake import Client as DatalakeClient
 
 # set deployment url
-deployment_url = 'https://abeja-annotation-demo.api.abeja.io/deployments/1874628703045/test'
+deployment_url = 'https://abeja-annotation-demo.api.abeja.io/deployments/XXXXXXXXXXXXXX/test'
 
 # set credential
-organization_id = '1698459253990'
-user_id = 'user-1782414544736'
-personal_access_token = '3dc265c5918b51b83582f6069fbd665243a456d6'
+organization_id = 'XXXXXXXXXXXXXXX'
+user_id = 'user-XXXXXXXXXXXXX'
+personal_access_token = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
 credential = {
     'user_id': user_id,
@@ -24,8 +24,8 @@ ANNOTATION_PROJECT_ID = '5378'
 ANNOTATION_ORGANIZATION_ID = '96'
 
 headers = {
-    'api-access-user-id': "2587",
-    'api-access-token': "VDXU7C8A"
+    'api-access-user-id': "XXXXX",
+    'api-access-token': "XXXXXXXXX"
 }
 
 cls2id = {'aeroplane': 0,
