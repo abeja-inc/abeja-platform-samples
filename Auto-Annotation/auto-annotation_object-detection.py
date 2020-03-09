@@ -20,8 +20,8 @@ credential = {
 
 # set credential for preinference
 ANNOTATION_API = 'https://annotation-tool.abeja.io'
-ANNOTATION_PROJECT_ID = '5378'
-ANNOTATION_ORGANIZATION_ID = '96'
+ANNOTATION_PROJECT_ID = 'XXXXX'
+ANNOTATION_ORGANIZATION_ID = 'XX'
 
 headers = {
     'api-access-user-id': "XXXXX",
